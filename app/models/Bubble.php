@@ -9,6 +9,6 @@ class Bubble
 
     function pop(): void
     {
-        $this->universe->popBubble($this);
+        $this->universe->pop_bubble($this);
     }
 }
