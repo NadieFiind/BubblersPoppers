@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag -->
     <link rel="icon" href="/public/images/favicon.ico" />
+    <link rel="stylesheet" href="/public/styles/base.css" />
 </head>
 
 <body>
