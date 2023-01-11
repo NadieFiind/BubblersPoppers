@@ -1,11 +1,5 @@
 <?php declare(strict_types=1);
 require "vendor/autoload.php";
-use app\models\Universe;
-use app\utils\PrettyPrint;
+use app\controllers\Router;
 
-const universe = new Universe();
-$b1 = universe->make_bubble();
-$b2 = universe->make_bubble();
-$b3 = universe->make_bubble();
-
-PrettyPrint::array(universe->bubbles);
+Router::render($_SERVER["PATH_INFO"] ?? "/");
