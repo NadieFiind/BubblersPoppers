@@ -15,6 +15,7 @@ class Router
         if (array_key_exists($path, ROUTES_MAP)) {
             include ROUTES_MAP[$path];
         } else {
+            http_response_code(404);
             include ROUTES_MAP["/404"];
         }
     }
