@@ -1,0 +1,17 @@
+{
+    "name": "nadie/bubblers-poppers",
+    "description": "Make and pop bubbles.",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "NadieFiind",
+            "email": "nadiefiind@gmail.com"
+        }
+    ],
+    "require": {}
+}
