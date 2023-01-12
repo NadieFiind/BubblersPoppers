@@ -9,10 +9,6 @@ function render(): void
         integrity="sha512-WJXVjqeINVpi5XXJ2jn0BSCfp0y80IKrYh731gLRnkAS9TKc5KNt/OfLtu+fCueqdWniouJ1ubM+VI/hbo7POQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script>
-        let bubbles = 10;
-    </script>
-
     <script src="/public/scripts/home.js"></script>
     HTML;
 }
