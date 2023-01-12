@@ -1,5 +1,6 @@
 /* eslint-disable func-style, no-unused-vars, no-undef */
 let bgImage = null;
+let bubbleImage = null;
 
 class Bubble {
     static bubbles = [];
@@ -17,7 +18,7 @@ class Bubble {
         this.id = id;
         this.x = x || random(0, width);
         this.y = y || random(0, height);
-        this.r = 15;
+        this.r = random(10, 30);
     }
 
     pop() {
@@ -33,8 +34,21 @@ class Bubble {
     }
 
     render() {
-        fill(255);
-        circle(this.x, this.y, this.r * 2);
+        push();
+        imageMode(CENTER);
+        image(bubbleImage, this.x, this.y, this.r * 2, this.r * 2);
+        pop();
+    }
+
+    move() {
+        this.x += random(-1, 1);
+        this.y += random(-3, 0);
+
+        if (this.y + this.r < 0) {
+            this.y = height + this.r;
+        }
+
+        this.x = constrain(this.x, 0, width);
     }
 
     isTouching() {
@@ -44,6 +58,7 @@ class Bubble {
 
 function preload() {
     bgImage = loadImage("/public/images/bg.jpg");
+    bubbleImage = loadImage("/public/images/favicon.ico");
 }
 
 async function setup() {
@@ -61,6 +76,7 @@ function draw() {
     background(bgImage);
 
     for (const bubble of Bubble.bubbles) {
+        bubble.move();
         bubble.render();
     }
 }
