@@ -1,4 +1,5 @@
 /* eslint-disable func-style, no-unused-vars, no-undef */
+let bgImage = null;
 
 class Bubble {
     static bubbles = [];
@@ -41,6 +42,10 @@ class Bubble {
     }
 }
 
+function preload() {
+    bgImage = loadImage("/public/images/bg.jpg");
+}
+
 async function setup() {
     createCanvas(windowWidth, windowHeight).parent("canvas");
 
@@ -53,7 +58,7 @@ async function setup() {
 }
 
 function draw() {
-    background(0);
+    background(bgImage);
 
     for (const bubble of Bubble.bubbles) {
         bubble.render();
