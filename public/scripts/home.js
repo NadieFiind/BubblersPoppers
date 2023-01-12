@@ -6,16 +6,16 @@ class Bubble {
     static async make() {
         const res = await fetch("/api/bubbles.php", {"method": "POST"});
         const data = await res.json();
-        const bubble = new Bubble(data.id);
+        const bubble = new Bubble(data.id, mouseX, mouseY);
 
         Bubble.bubbles.push(bubble);
         return bubble;
     }
 
-    constructor(id) {
+    constructor(id, x, y) {
         this.id = id;
-        this.x = random(0, width);
-        this.y = random(0, height);
+        this.x = x || random(0, width);
+        this.y = y || random(0, height);
         this.r = 15;
     }
 
