@@ -1,7 +1,7 @@
-CREATE DATABASE bubblerspoppers;
+CREATE DATABASE IF NOT EXISTS bubblerspoppers;
 USE bubblerspoppers;
 
-CREATE TABLE bubbles (
+CREATE TABLE IF NOT EXISTS bubbles (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     made_at DATETIME NOT NULL,
     popped_at DATETIME
