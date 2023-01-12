@@ -1,6 +1,7 @@
 /* eslint-disable func-style, no-unused-vars, no-undef */
 let bgImage = null;
 let bubbleImage = null;
+let poppingBubbleImage = null;
 
 class Bubble {
     static bubbles = [];
@@ -16,33 +17,47 @@ class Bubble {
 
     constructor(id, x, y) {
         this.id = id;
-        this.x = x || random(0, width);
-        this.y = y || random(0, height);
         this.r = random(10, 30);
+        this.x = x || random(0, width);
+        this.y = y || height + this.r * 2;
+        this.isPopping = false;
     }
 
     pop() {
-        const index = Bubble.bubbles.indexOf(this);
-        if (index > -1) {
-            Bubble.bubbles.splice(index, 1);
-        }
-
+        this.isPopping = true;
         fetch("/api/bubbles.php", {
             "method": "PATCH",
             "body": this.id
         });
+
+        setTimeout(() => {
+            const index = Bubble.bubbles.indexOf(this);
+            if (index > -1) {
+                Bubble.bubbles.splice(index, 1);
+            }
+        }, 500);
     }
 
     render() {
         push();
         imageMode(CENTER);
-        image(bubbleImage, this.x, this.y, this.r * 2, this.r * 2);
+
+        if (this.isPopping) {
+            image(poppingBubbleImage, this.x, this.y, this.r * 2, this.r * 2);
+        } else {
+            image(bubbleImage, this.x, this.y, this.r * 2, this.r * 2);
+        }
+
         pop();
     }
 
     move() {
+        if (this.isPopping) {
+            return;
+        }
+
         this.x += random(-1, 1);
-        this.y += random(-3, 0);
+        this.y += random(-0.1, 0) * this.r;
 
         if (this.y + this.r < 0) {
             this.y = height + this.r;
@@ -59,6 +74,7 @@ class Bubble {
 function preload() {
     bgImage = loadImage("/public/images/bg.jpg");
     bubbleImage = loadImage("/public/images/favicon.ico");
+    poppingBubbleImage = loadImage("/public/images/popping_bubble.png");
 }
 
 async function setup() {
