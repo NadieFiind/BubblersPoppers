@@ -15,15 +15,20 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $bubbles = $query->fetchAll(PDO::FETCH_CLASS);
     echo json_encode($bubbles);
 } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $now = date_create()->format("Y-m-d H:i:s");
-    $db->query("INSERT INTO bubbles (made_at) VALUES ('$now');");
+    $payload = json_decode(file_get_contents("php://input"), true);
+    $method = $payload["method"];
 
-    $query = $db->query("SELECT * FROM bubbles WHERE id = LAST_INSERT_ID();");
-    $bubble = $query->fetch(PDO::FETCH_ASSOC);
-    echo json_encode($bubble);
-} else if ($_SERVER["REQUEST_METHOD"] === "PATCH") {
-    $id = file_get_contents("php://input");
-    $now = date_create()->format("Y-m-d H:i:s");
-    $stmt = $db->prepare("UPDATE bubbles SET popped_at = '$now' WHERE id = :id;");
-    $stmt->execute(["id" => $id]);
+    if ($method === "POST") {
+        $now = date_create()->format("Y-m-d H:i:s");
+        $db->query("INSERT INTO bubbles (made_at) VALUES ('$now');");
+
+        $query = $db->query("SELECT * FROM bubbles WHERE id = LAST_INSERT_ID();");
+        $bubble = $query->fetch(PDO::FETCH_ASSOC);
+        echo json_encode($bubble);
+    } else if ($method === "PATCH") {
+        $id = $payload["id"];
+        $now = date_create()->format("Y-m-d H:i:s");
+        $stmt = $db->prepare("UPDATE bubbles SET popped_at = '$now' WHERE id = :id;");
+        $stmt->execute(["id" => $id]);
+    }
 }

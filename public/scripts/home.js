@@ -7,7 +7,10 @@ class Bubble {
     static bubbles = [];
 
     static async make() {
-        const res = await fetch("/api/bubbles.php", {"method": "POST"});
+        const res = await fetch("/api/bubbles.php", {
+            "method": "POST",
+            "body": JSON.stringify({"method": "POST"})
+        });
         const data = await res.json();
         const bubble = new Bubble(data.id, mouseX, mouseY);
 
@@ -26,8 +29,11 @@ class Bubble {
     pop() {
         this.isPopping = true;
         fetch("/api/bubbles.php", {
-            "method": "PATCH",
-            "body": this.id
+            "method": "POST",
+            "body": JSON.stringify({
+                "method": "PATCH",
+                "id": this.id
+            })
         });
 
         setTimeout(() => {
