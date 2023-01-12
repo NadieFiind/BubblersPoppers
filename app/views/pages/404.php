@@ -4,5 +4,5 @@ function render(): void
 {
     echo <<<HTML
     <h1>Page Not Found</h1>
-    HTML;
+HTML;
 }

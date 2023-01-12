@@ -10,5 +10,5 @@ function render(): void
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="/public/scripts/home.js"></script>
-    HTML;
+HTML;
 }
