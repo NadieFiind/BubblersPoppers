@@ -113,3 +113,7 @@ function mouseClicked() {
 
     Bubble.make();
 }
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
