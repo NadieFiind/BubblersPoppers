@@ -6,14 +6,15 @@ let poppingBubbleImage = null;
 class Bubble {
     static bubbles = [];
 
-    static async make() {
+    static async make(x, y) {
+        const bubble = new Bubble(null, x, y);
         const res = await fetch("/api/bubbles.php", {
             "method": "POST",
             "body": JSON.stringify({"method": "POST"})
         });
         const data = await res.json();
-        const bubble = new Bubble(data.id, mouseX, mouseY);
 
+        bubble.id = data.id;
         Bubble.bubbles.push(bubble);
         return bubble;
     }
@@ -72,7 +73,7 @@ class Bubble {
         this.x = constrain(this.x, 0, width);
     }
 
-    isTouching() {
+    isTouching(mouseX, mouseY) {
         return dist(mouseX, mouseY, this.x, this.y) < this.r;
     }
 }
@@ -104,14 +105,17 @@ function draw() {
 }
 
 function mouseClicked() {
+    const x = mouseX;
+    const y = mouseY;
+
     for (const bubble of Bubble.bubbles) {
-        if (bubble.isTouching()) {
+        if (bubble.isTouching(x, y)) {
             bubble.pop();
             return;
         }
     }
 
-    Bubble.make();
+    Bubble.make(x, y);
 }
 
 function windowResized() {
