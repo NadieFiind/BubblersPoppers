@@ -2,8 +2,10 @@
 require_once "../vendor/autoload.php";
 Dotenv\Dotenv::createImmutable(__DIR__ . "/..")->safeLoad();
 
+$db_name = $_ENV["DB_NAME"] ?? "bubblerspoppers";
+$db_host = $_ENV["DB_HOST"] ?? "localhost";
 $db = new PDO(
-    "mysql:dbname=bubblerspoppers;host={$_ENV['DB_HOST']}",
+    "mysql:dbname=$db_name;host=$db_host",
     $_ENV["DB_USER"] ?? null,
     $_ENV["DB_PASS"] ?? null
 );
