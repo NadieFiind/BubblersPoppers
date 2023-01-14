@@ -22,4 +22,5 @@ class Router
     }
 }
 
-Router::render($_SERVER["PATH_INFO"] ?? "/");
+$path = parse_url($_SERVER["REQUEST_URI"])["path"];
+Router::render($path);
