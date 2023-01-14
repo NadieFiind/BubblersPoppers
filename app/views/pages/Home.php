@@ -3,6 +3,7 @@
 function render(): void
 {
     echo <<<HTML
+    <a href="/stats" onclick="event.stopPropagation()" class="nav-link">Stats</a>
     <div id="canvas"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.min.js"

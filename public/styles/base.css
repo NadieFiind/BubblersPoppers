@@ -1,4 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
 body {
     margin: 0;
     overflow: hidden;
+}
+
+.nav-link {
+    position: fixed;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    font-family: Poppins;
+    text-decoration-color: white;
+    -webkit-text-stroke: 1px black;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+}
+.nav-link:hover {
+    transform: translateX(-50%) scale(1.1);
 }
