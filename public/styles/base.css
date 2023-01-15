@@ -20,3 +20,12 @@ body {
 .nav-link:hover {
     transform: translateX(-50%) scale(1.1);
 }
+
+.bubbles-count {
+    position: absolute;
+    color: black;
+    font-size: 0.9rem;
+    font-family: Poppins;
+    top: 0;
+    left: 5px;
+}

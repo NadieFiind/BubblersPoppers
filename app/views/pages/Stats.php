@@ -3,6 +3,11 @@
 function render(): void
 {
     echo <<<HTML
-    <h1>Stats</h1>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div style="height: 100vh; width: 100vw;">
+        <canvas id="chart"></canvas>
+    </div>
+    <span class="bubbles-count"></span>
+    <script src="/public/scripts/stats.js"></script>
 HTML;
 }

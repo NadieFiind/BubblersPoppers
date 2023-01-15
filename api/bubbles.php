@@ -13,9 +13,23 @@ $db = new PDO(
 header("Content-Type: application/json");
 
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
-    $query = $db->query("SELECT * FROM bubbles WHERE popped_at IS NULL;");
-    $bubbles = $query->fetchAll(PDO::FETCH_CLASS);
-    echo json_encode($bubbles);
+    if ($_GET["include_popped"] ?? false) {
+        if ($_GET["length"] ?? false) {
+            $query = $db->query("SELECT count(*) FROM bubbles;");
+            echo json_encode(["length" => $query->fetchColumn()]);
+        } else {
+            $query = $db->query("SELECT * FROM bubbles;");
+            echo json_encode($query->fetchAll(PDO::FETCH_CLASS));
+        }
+    } else {
+        if ($_GET["length"] ?? false) {
+            $query = $db->query("SELECT count(*) FROM bubbles WHERE popped_at IS NULL;");
+            echo json_encode(["length" => $query->fetchColumn()]);
+        } else {
+            $query = $db->query("SELECT * FROM bubbles WHERE popped_at IS NULL;");
+            echo json_encode($query->fetchAll(PDO::FETCH_CLASS));
+        }
+    }
 } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $payload = json_decode(file_get_contents("php://input"), true);
     $method = $payload["method"];
