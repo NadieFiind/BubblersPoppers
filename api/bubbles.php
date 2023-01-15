@@ -10,41 +10,76 @@ $db = new PDO(
     $_ENV["DB_PASS"] ?? null
 );
 
-header("Content-Type: application/json");
+class API
+{
+    static function get(): array
+    {
+        global $db;
+        $queryStr = "";
 
-if ($_SERVER["REQUEST_METHOD"] === "GET") {
-    if ($_GET["include_popped"] ?? false) {
         if ($_GET["length"] ?? false) {
-            $query = $db->query("SELECT count(*) FROM bubbles;");
-            echo json_encode(["length" => $query->fetchColumn()]);
+            $queryStr = "SELECT count(*) FROM bubbles";
         } else {
-            $query = $db->query("SELECT * FROM bubbles;");
-            echo json_encode($query->fetchAll(PDO::FETCH_CLASS));
+            $queryStr = "SELECT * FROM bubbles";
         }
-    } else {
-        if ($_GET["length"] ?? false) {
-            $query = $db->query("SELECT count(*) FROM bubbles WHERE popped_at IS NULL;");
-            echo json_encode(["length" => $query->fetchColumn()]);
+
+        if ($_GET["include_popped"] ?? false) {
+            $queryStr .= ";";
         } else {
-            $query = $db->query("SELECT * FROM bubbles WHERE popped_at IS NULL;");
-            echo json_encode($query->fetchAll(PDO::FETCH_CLASS));
+            $queryStr .= " WHERE popped_at IS NULL;";
+        }
+
+        $query = $db->query($queryStr);
+
+        if ($_GET["length"] ?? false) {
+            return ["length" => $query->fetchColumn()];
+        } else {
+            return $query->fetchAll(PDO::FETCH_CLASS);
         }
     }
-} else if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $payload = json_decode(file_get_contents("php://input"), true);
-    $method = $payload["method"];
 
-    if ($method === "POST") {
+    static function post(): array
+    {
+        global $db;
+
         $now = date_create()->format("Y-m-d H:i:s");
         $db->query("INSERT INTO bubbles (made_at) VALUES ('$now');");
 
         $query = $db->query("SELECT * FROM bubbles WHERE id = LAST_INSERT_ID();");
-        $bubble = $query->fetch(PDO::FETCH_ASSOC);
-        echo json_encode($bubble);
-    } else if ($method === "PATCH") {
-        $id = $payload["id"];
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    static function patch($id): array
+    {
+        global $db;
+
         $now = date_create()->format("Y-m-d H:i:s");
         $stmt = $db->prepare("UPDATE bubbles SET popped_at = '$now' WHERE id = :id;");
         $stmt->execute(["id" => $id]);
+
+        return [];
+    }
+
+    static function process(): string
+    {
+        $response = [];
+
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
+            $response = self::get();
+        } else if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $payload = json_decode(file_get_contents("php://input"), true);
+            $method = $payload["method"];
+
+            if ($method === "POST") {
+                $response = self::post();
+            } else if ($method === "PATCH") {
+                $response = self::patch($payload["id"]);
+            }
+        }
+
+        return json_encode($response);
     }
 }
+
+header("Content-Type: application/json");
+echo API::process();
