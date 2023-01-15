@@ -9,6 +9,7 @@ $db = new PDO(
     $_ENV["DB_USER"] ?? null,
     $_ENV["DB_PASS"] ?? null
 );
+$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 class API
 {
@@ -23,18 +24,26 @@ class API
             $queryStr = "SELECT * FROM bubbles";
         }
 
-        if ($_GET["include_popped"] ?? false) {
-            $queryStr .= ";";
-        } else {
-            $queryStr .= " WHERE popped_at IS NULL;";
+        if (!($_GET["include_popped"] ?? false)) {
+            $queryStr .= " WHERE popped_at IS NULL";
         }
 
-        $query = $db->query($queryStr);
+        if (($_GET["limit"] ?? null) !== null) {
+            $queryStr .= " ORDER BY id DESC LIMIT :limit";
+        }
+
+        $stmt = $db->prepare($queryStr . ";");
+
+        if (($_GET["limit"] ?? null) !== null) {
+            $stmt->execute(["limit" => (int) $_GET["limit"]]);
+        } else {
+            $stmt->execute();
+        }
 
         if ($_GET["length"] ?? false) {
-            return ["length" => $query->fetchColumn()];
+            return ["length" => $stmt->fetchColumn()];
         } else {
-            return $query->fetchAll(PDO::FETCH_CLASS);
+            return $stmt->fetchAll(PDO::FETCH_CLASS);
         }
     }
 

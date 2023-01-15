@@ -87,7 +87,7 @@ function preload() {
 async function setup() {
     createCanvas(windowWidth, windowHeight).parent("canvas");
 
-    const res = await fetch("/api/bubbles.php");
+    const res = await fetch("/api/bubbles.php?limit=999");
     const data = await res.json();
 
     for (const bubbleData of data) {
